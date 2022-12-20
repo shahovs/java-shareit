@@ -2,60 +2,64 @@ package ru.practicum.shareit.user.sevice;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.user.UserMapper;
-import ru.practicum.shareit.user.UserRepository;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.exception.ObjectDidntFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.repository.UserRepository;
 
-import java.util.Collection;
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 @AllArgsConstructor
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
     @Override
     public UserDto getUserById(long userId) {
-        User user = userRepository.getUserById(userId);
-        return UserMapper.toUserDto(user);
+        return UserMapper.toUserDto(userRepository.findById(userId).orElseThrow(
+                () -> new ObjectDidntFoundException("Пользователь с id " + userId + " не найден.")));
     }
 
     @Override
     public List<UserDto> getAllUsers() {
-        Collection<User> users = userRepository.getAllUsers();
-        return users.stream()
-                .map(UserMapper::toUserDto)
-                .collect(toList());
+        List<User> users = userRepository.findAll();
+        return UserMapper.toUserDtos(users);
     }
 
     @Override
+    @Transactional
     public UserDto saveUser(UserDto userDto) {
         User user = UserMapper.toUser(userDto);
-        user = userRepository.saveUser(user);
+        user = userRepository.save(user);
         return UserMapper.toUserDto(user);
     }
 
     @Override
+    @Transactional
     public UserDto updateUser(long userId, UserDto userDto) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ObjectDidntFoundException("Пользователь с id " + userId + " не найден.")
+        );
         String name = userDto.getName();
         String email = userDto.getEmail();
         if (name != null && !name.isBlank()) {
-            userRepository.updateUserName(userId, name);
+            user.setName(name);
         }
         if (email != null && !email.isBlank()) {
-            userRepository.updateUserEmail(userId, email);
+            user.setEmail(email);
         }
-        User user = userRepository.getUserById(userId);
+        user = userRepository.save(user);
         return UserMapper.toUserDto(user);
     }
 
     @Override
+    @Transactional
     public void deleteUser(long userId) {
-        userRepository.deleteUser(userId);
+        userRepository.deleteById(userId);
     }
 
 }
