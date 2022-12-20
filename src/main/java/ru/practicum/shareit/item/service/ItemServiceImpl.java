@@ -116,7 +116,7 @@ public class ItemServiceImpl implements ItemService {
             return new ArrayList<>();
         }
         List<Item> foundItems = itemRepository.search(text);
-        return ItemMapper.ToItemDtos(foundItems);
+        return ItemMapper.toItemDtos(foundItems);
     }
 
     @Override
