@@ -1,9 +1,7 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import ru.practicum.shareit.Create;
 import ru.practicum.shareit.item.model.Item;
 
@@ -13,9 +11,6 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-@ToString
-@EqualsAndHashCode
-
 public class CommentDto {
 
     private Long id;

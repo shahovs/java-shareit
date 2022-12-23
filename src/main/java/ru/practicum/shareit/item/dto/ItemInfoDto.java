@@ -6,6 +6,7 @@ import ru.practicum.shareit.Create;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,15 +29,25 @@ public class ItemInfoDto {
 
     private BookingInfoDto nextBooking;
 
-    private List<CommentDto> comments;
+    private List<CommentInfoDto> comments;
 
     @Getter
     @Setter
     public static class BookingInfoDto {
-        Long id;
-        LocalDateTime start;
-        LocalDateTime end;
-        Long bookerId;
+        private Long id;
+        private LocalDateTime start;
+        private LocalDateTime end;
+        private Long bookerId;
+    }
+
+    @Getter
+    @Setter
+    public static class CommentInfoDto {
+        private Long id;
+        private String text;
+        private Long itemId;
+        private String authorName;
+        private LocalDate created;
     }
 
 }

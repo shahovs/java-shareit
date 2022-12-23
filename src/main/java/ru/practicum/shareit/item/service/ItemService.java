@@ -20,6 +20,6 @@ public interface ItemService {
 
     List<ItemDto> findItems(String text);
 
-    CommentDto createComment(long itemId, CommentDto commentDto, long authorId);
+    ItemInfoDto.CommentInfoDto createComment(long itemId, CommentDto commentDto, long authorId);
 
 }

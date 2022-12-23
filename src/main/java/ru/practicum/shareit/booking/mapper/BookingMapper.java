@@ -15,9 +15,25 @@ public class BookingMapper {
         bookingDto.setId(booking.getId());
         bookingDto.setStart(booking.getStart());
         bookingDto.setEnd(booking.getEnd());
-        bookingDto.setItem(booking.getItem());
-        bookingDto.setBooker(booking.getBooker());
+        bookingDto.setItemId(booking.getItem().getId());
         bookingDto.setStatus(booking.getStatus());
+
+        Item item = booking.getItem();
+        BookingDto.ItemDto itemDto = new BookingDto.ItemDto();
+        itemDto.setId(item.getId());
+        itemDto.setName(item.getName());
+        itemDto.setDescription(item.getDescription());
+        itemDto.setAvailable(item.getAvailable());
+        itemDto.setOwnerId(item.getOwner().getId());
+        bookingDto.setItem(itemDto);
+
+        User booker = booking.getBooker();
+        BookingDto.UserDto bookerDto = new BookingDto.UserDto();
+        bookerDto.setId(booker.getId());
+        bookerDto.setName(booker.getName());
+        bookerDto.setEmail(booker.getEmail());
+        bookingDto.setBooker(bookerDto);
+
         return bookingDto;
     }
 

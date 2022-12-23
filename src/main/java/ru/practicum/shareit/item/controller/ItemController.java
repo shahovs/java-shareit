@@ -56,7 +56,7 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
-    CommentDto createComment(@RequestHeader("X-Sharer-User-Id") long authorId,
+    ItemInfoDto.CommentInfoDto createComment(@RequestHeader("X-Sharer-User-Id") long authorId,
                              @Min(1L) @PathVariable long itemId,
                              @Validated({Create.class}) @RequestBody CommentDto commentDto) {
         log.info("Получен запрос к эндпоинту: POST /items/{itemId}/comment, Создан объект из тела запроса:'{}'",

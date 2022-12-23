@@ -27,8 +27,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     //    getAllBookingsByBookerId (5 методов)
     List<Booking> findAllByBookerOrderByStartDesc(User booker);
 
-    @Query("" +
-            "select b " +
+    @Query("select b " +
             "from Booking b " +
             "where b.booker = :booker " +
             "and :now between b.start and b.end " +
@@ -45,8 +44,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     //    getAllBookingsByOwnerId (5 методов)
     List<Booking> findAllByItem_OwnerOrderByStartDesc(User owner);
 
-    @Query(value = "" +
-            "select * " +
+    @Query(value = "select * " +
             "from bookings b " +
             "join items i on b.item_id = i.id " +
             "where i.owner_id = :ownerId " +

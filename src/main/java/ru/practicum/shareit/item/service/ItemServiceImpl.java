@@ -72,7 +72,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemDto createItem(ItemDto itemDto, long userId) {
-        checkItemDtoName(itemDto);
         User owner  = userRepository.findById(userId).orElseThrow(
                 () -> new ObjectDidntFoundException("User не найден. userId = " + userId));
         Item item = ItemMapper.toItem(itemDto, owner);
@@ -120,7 +119,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public CommentDto createComment(long itemId, CommentDto commentDto, long authorId) {
+    public ItemInfoDto.CommentInfoDto createComment(long itemId, CommentDto commentDto, long authorId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new ObjectDidntFoundException("Item не найден"));
         User author = userRepository.findById(authorId).orElseThrow(
                 () -> new ObjectDidntFoundException("Пользователь не найден"));
@@ -129,7 +128,7 @@ public class ItemServiceImpl implements ItemService {
         }
         Comment comment = new Comment(null, commentDto.getText(), item, author, LocalDate.now());
         comment = commentRepository.save(comment);
-        return ItemMapper.toCommentDto(comment);
+        return ItemMapper.toCommentInfoDto(comment);
     }
 
     private static ItemInfoDto entryToItemInfoDto(Map.Entry<Item, List<Booking>> entry) {
@@ -156,16 +155,10 @@ public class ItemServiceImpl implements ItemService {
 
     private void addComments(ItemInfoDto itemInfoDto, Item item) {
         List<Comment> comments = commentRepository.findAllByItem(item);
-        List<CommentDto> commentDtos = comments.stream()
-                .map(ItemMapper::toCommentDto)
+        List<ItemInfoDto.CommentInfoDto> commentInfoDtos = comments.stream()
+                .map(ItemMapper::toCommentInfoDto)
                 .collect(toList());
-        itemInfoDto.setComments(commentDtos);
-    }
-
-    private void checkItemDtoName(ItemDto itemDto) {
-        if (itemDto.getName().isBlank()) {
-            throw new IllegalArgumentException("Вещь не должна быть с пустым названием");
-        }
+        itemInfoDto.setComments(commentInfoDtos);
     }
 
 }

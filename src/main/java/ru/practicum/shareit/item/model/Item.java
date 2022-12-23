@@ -21,10 +21,10 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 255)
+    @Column(name = "name", nullable = false, length = 40)
     private String name;
 
-    @Column(name = "description", nullable = false, length = 4000)
+    @Column(name = "description", nullable = false, length = 400)
     private String description;
 
     @Column(name = "is_available", nullable = false)
