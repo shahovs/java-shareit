@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +9,7 @@ import ru.practicum.shareit.Update;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.sevice.UserService;
 
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
@@ -20,7 +21,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{userId}")
-    UserDto getUserById(@PathVariable long userId) {
+    UserDto getUserById(@Min(1L) @PathVariable long userId) {
         log.info("Получен запрос к эндпоинту: GET /users/{}", userId);
         return userService.getUserById(userId);
     }
@@ -38,14 +39,14 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    UserDto updateUser(@PathVariable long userId,
+    UserDto updateUser(@Min(1L) @PathVariable long userId,
                        @Validated({Update.class}) @RequestBody UserDto userDto) {
         log.info("Получен запрос к эндпоинту: PATCH /users, Создан объект из тела запроса:'{}'", userDto);
         return userService.updateUser(userId, userDto);
     }
 
     @DeleteMapping("/{userId}")
-    void deleteUser(@PathVariable long userId) {
+    void deleteUser(@Min(1L) @PathVariable long userId) {
         log.info("Получен запрос к эндпоинту: DELETE /users/{}", userId);
         userService.deleteUser(userId);
     }

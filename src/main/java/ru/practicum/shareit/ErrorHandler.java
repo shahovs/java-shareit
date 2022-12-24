@@ -6,18 +6,30 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.practicum.shareit.exception.ConflictException;
-import ru.practicum.shareit.exception.ObjectAlreadyExistsException;
-import ru.practicum.shareit.exception.ObjectDidntFoundException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import ru.practicum.shareit.exception.*;
 
 @RestControllerAdvice("ru.practicum.shareit")
 @Slf4j
 public class ErrorHandler {
 
     @ExceptionHandler
+    public ResponseEntity<String> handleItemIsNotAvailableException(final ItemIsNotAvailableException e) {
+        log.info("400 {}", e.getMessage(), e);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
     public ResponseEntity<String> handleIllegalArgumentException(final IllegalArgumentException e) {
         log.info("400 {}", e.getMessage(), e);
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(final MethodArgumentTypeMismatchException e) {
+        log.info("400 {}", e.getMessage(), e);
+        final String error = "Unknown " + e.getName() + ": " + e.getValue();
+        return new ResponseEntity<>(new ErrorResponse(error), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
@@ -30,6 +42,12 @@ public class ErrorHandler {
     public ResponseEntity<String> handleObjectAlreadyExistsException(final ObjectAlreadyExistsException e) {
         log.info("400 {}", e.getMessage(), e);
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleOtherException(final OtherException e) {
+        log.info("404 {}", e.getMessage(), e);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler

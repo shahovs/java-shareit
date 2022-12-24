@@ -3,23 +3,25 @@ package ru.practicum.shareit.item.dto;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.shareit.Create;
+import ru.practicum.shareit.item.model.Item;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+
 
 @Getter
 @Setter
-public class ItemDto {
+public class CommentDto {
 
     private Long id;
 
     @NotBlank(groups = {Create.class})
-    private String name;
+    private String text;
 
-    @NotBlank(groups = {Create.class})
-    private String description;
+    private Item item;
 
-    @NotNull(groups = {Create.class})
-    private Boolean available;
+    private String authorName;
+
+    private LocalDate created;
 
 }
