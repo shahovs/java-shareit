@@ -9,36 +9,46 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.sevice.BookingService;
 
-import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/bookings")
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 public class BookingController {
 
     private final BookingService bookingService;
 
     @GetMapping("/{bookingId}")
     BookingDto getBookingById(@RequestHeader("X-Sharer-User-Id") long userId,
-                              @Min(1L) @PathVariable long bookingId) {
+                              @Positive @PathVariable long bookingId) {
         log.info("Получен запрос к эндпоинту: GET /bookings/{}", bookingId);
         return bookingService.getBookingById(bookingId, userId);
     }
 
     @GetMapping
     List<BookingDto> getAllBookingByBookerId(@RequestHeader("X-Sharer-User-Id") long bookerId,
-                                             @RequestParam(defaultValue = "ALL") BookingState state) {
-        log.info("Получен запрос к эндпоинту: GET /bookings. X-Sharer-User-Id = {}", bookerId);
-        return bookingService.getAllBookingsByBookerId(bookerId, state);
+                                             @RequestParam(defaultValue = "ALL") BookingState state,
+                                             @PositiveOrZero @RequestParam(name = "from", defaultValue = "0")
+                                             int fromElement,
+                                             @Positive @RequestParam(defaultValue = "10") int size) {
+        log.info("Получен запрос к эндпоинту: GET /bookings. X-Sharer-User-Id = {}, from: {}, size: {}", bookerId,
+                fromElement, size);
+        return bookingService.getAllBookingsByBookerId(bookerId, state, fromElement, size);
     }
 
     @GetMapping("/owner")
     List<BookingDto> getAllBookingByOwnerId(@RequestHeader("X-Sharer-User-Id") long ownerId,
-                                            @RequestParam(defaultValue = "ALL") BookingState state) {
-        log.info("Получен запрос к эндпоинту: GET /bookings/owner. X-Sharer-User-Id = {}", ownerId);
-        return bookingService.getAllBookingsByOwnerId(ownerId, state);
+                                            @RequestParam(defaultValue = "ALL") BookingState state,
+                                            @PositiveOrZero @RequestParam(name = "from", defaultValue = "0")
+                                            int fromElement,
+                                            @Positive @RequestParam(defaultValue = "10") int size) {
+        log.info("Получен запрос к эндпоинту: GET /bookings/owner. X-Sharer-User-Id = {}, from: {}, size: {}", ownerId,
+                fromElement, size);
+        return bookingService.getAllBookingsByOwnerId(ownerId, state, fromElement, size);
     }
 
     @PostMapping
@@ -50,7 +60,7 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     BookingDto changeStatusOfBooking(@RequestHeader("X-Sharer-User-Id") long ownerId,
-                                     @Min(1L) @PathVariable long bookingId,
+                                     @Positive @PathVariable long bookingId,
                                      @RequestParam() Boolean approved) {
         return bookingService.changeStatusOfBooking(ownerId, bookingId, approved);
     }

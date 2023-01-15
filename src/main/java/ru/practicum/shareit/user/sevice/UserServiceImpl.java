@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user.sevice;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.ObjectDidntFoundException;
@@ -25,8 +26,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
-        List<User> users = userRepository.findAll();
+    public List<UserDto> getAllUsers(PageRequest pageRequest) {
+        List<User> users = userRepository.findAll(pageRequest).toList();
         return UserMapper.toUserDtos(users);
     }
 

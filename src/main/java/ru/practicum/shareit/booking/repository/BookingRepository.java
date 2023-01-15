@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -25,7 +26,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
 
     //    getAllBookingsByBookerId (5 методов)
-    List<Booking> findAllByBookerOrderByStartDesc(User booker);
+    List<Booking> findAllByBooker(User booker, Pageable pageable);
 
     @Query("select b " +
             "from Booking b " +
@@ -42,7 +43,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
 
     //    getAllBookingsByOwnerId (5 методов)
-    List<Booking> findAllByItem_OwnerOrderByStartDesc(User owner);
+    List<Booking> findAllByItem_OwnerOrderByStartDesc(User owner, Pageable pageable);
 
     @Query(value = "select * " +
             "from bookings b " +

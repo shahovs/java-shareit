@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user.sevice;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.dto.UserDto;
 
@@ -10,7 +11,7 @@ public interface UserService {
 
     UserDto getUserById(long userId);
 
-    List<UserDto> getAllUsers();
+    List<UserDto> getAllUsers(PageRequest pageRequest);
 
     UserDto saveUser(UserDto userDto);
 
