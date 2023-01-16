@@ -1,8 +1,12 @@
 package ru.practicum.shareit.booking.sevice;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.MyPageRequest;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -43,13 +47,17 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getAllBookingsByBookerId(long bookerId, BookingState state) {
+    public List<BookingDto> getAllBookingsByBookerId(long bookerId, BookingState state, int fromElement, int size) {
         User booker = userRepository.findById(bookerId).orElseThrow(
                 () -> new ObjectDidntFoundException("Пользователь не найден"));
+
+        Sort sortByStartDesc = Sort.by(Sort.Direction.DESC, "start");
+        Pageable pageable = MyPageRequest.of(fromElement, size, sortByStartDesc);
+
         final List<Booking> result;
         switch (state) {
             case ALL:
-                result = bookingRepository.findAllByBookerOrderByStartDesc(booker);
+                result = bookingRepository.findAllByBooker(booker, pageable);
                 break;
             case CURRENT:
                 result = bookingRepository.findAllByBookerAndCurrentOrderByStartDesc(booker, LocalDateTime.now());
@@ -73,16 +81,21 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getAllBookingsByOwnerId(long ownerId, BookingState state) {
+    public List<BookingDto> getAllBookingsByOwnerId(long ownerId, BookingState state, int fromElement, int size) {
         User owner = userRepository.findById(ownerId).orElseThrow(
                 () -> new ObjectDidntFoundException("Пользователь не найден"));
+
+        int fromPage = fromElement / size;
+        Pageable pageable = PageRequest.of(fromPage, size);
+
         final List<Booking> result;
         switch (state) {
             case ALL:
-                result = bookingRepository.findAllByItem_OwnerOrderByStartDesc(owner);
+                result = bookingRepository.findAllByItem_OwnerOrderByStartDesc(owner, pageable);
                 break;
             case CURRENT:
-                result = bookingRepository.findAllByItem_OwnerAndCurrentOrderByStartDesc(owner.getId(), LocalDateTime.now());
+                result = bookingRepository.findAllByItem_OwnerAndCurrentOrderByStartDesc(owner.getId(),
+                        LocalDateTime.now());
                 break;
             case PAST:
                 result = bookingRepository.findAllByItem_OwnerAndEndBeforeOrderByStartDesc(owner, LocalDateTime.now());

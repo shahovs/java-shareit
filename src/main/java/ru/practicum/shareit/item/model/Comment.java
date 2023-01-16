@@ -10,18 +10,13 @@ import java.time.LocalDate;
 @Table(name = "comments")
 @Getter
 @Setter
-@ToString
-@EqualsAndHashCode
-@AllArgsConstructor
-@NoArgsConstructor
 public class Comment {
 
-    @EqualsAndHashCode.Exclude
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "text", nullable = false, length = 400)
+    @Column(/*name = "text", */nullable = false, length = 400)
     private String text;
 
     @ManyToOne
