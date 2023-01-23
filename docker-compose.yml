@@ -30,7 +30,7 @@ services:
     ports:
       - "6541:5432"
     environment:
-      - TZ=Europe/Podgorica
+#      - TZ=Europe/Podgorica
       - DB=shareit
       - USERNAME=test
       - PASSWORD=test
