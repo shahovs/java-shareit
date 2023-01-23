@@ -55,6 +55,9 @@ public class BookingController {
     ResponseEntity<Object> createBooking(@RequestHeader("X-Sharer-User-Id") long userId,
                                          @Validated({Create.class}) @RequestBody BookItemRequestDto bookItemRequestDto) {
         log.info("запрос к эндпоинту: POST /bookings, Создан объект из тела запроса:'{}'", bookItemRequestDto);
+        if (bookItemRequestDto.getStart().isAfter(bookItemRequestDto.getEnd())) {
+            throw new IllegalArgumentException("Начало бронирования должно предшестовать окончанию бронирования");
+        }
         return bookingClient.createBooking(userId, bookItemRequestDto);
     }
 

@@ -51,9 +51,6 @@ public class BookingClient extends BaseClient {
     }
 
     public ResponseEntity<Object> createBooking(long userId, BookItemRequestDto bookItemRequestDto) {
-        if (bookItemRequestDto.getStart().isAfter(bookItemRequestDto.getEnd())) {
-            throw new IllegalArgumentException("Начало бронирования должно предшестовать окончанию бронирования");
-        }
         return post("", userId, bookItemRequestDto);
     }
 
