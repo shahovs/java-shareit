@@ -27,8 +27,6 @@ services:
   db:
     image: buildo/h2database
     container_name: shareit-db
-    #    volumes:
-    #      - /shareit_postgresql-db
     ports:
       - "6541:5432"
     environment:

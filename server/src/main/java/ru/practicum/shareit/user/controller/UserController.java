@@ -3,11 +3,8 @@ package ru.practicum.shareit.user.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.Create;
 import ru.practicum.shareit.MyPageRequest;
-import ru.practicum.shareit.Update;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.sevice.UserService;
 
@@ -17,7 +14,6 @@ import java.util.List;
 @RequestMapping(path = "/users")
 @Slf4j
 @RequiredArgsConstructor
-@Validated
 public class UserController {
 
     private final UserService userService;
@@ -37,14 +33,14 @@ public class UserController {
     }
 
     @PostMapping
-    UserDto saveUser(@Validated({Create.class}) @RequestBody UserDto userDto) {
+    UserDto saveUser(@RequestBody UserDto userDto) {
         log.info("Получен запрос к эндпоинту: POST /users, Создан объект из тела запроса:'{}'", userDto);
         return userService.saveUser(userDto);
     }
 
     @PatchMapping("/{userId}")
     UserDto updateUser(@PathVariable long userId,
-                       @Validated({Update.class}) @RequestBody UserDto userDto) {
+                       @RequestBody UserDto userDto) {
         log.info("Получен запрос к эндпоинту: PATCH /users, Создан объект из тела запроса:'{}'", userDto);
         return userService.updateUser(userId, userDto);
     }

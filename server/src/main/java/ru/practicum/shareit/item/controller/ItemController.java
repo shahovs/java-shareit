@@ -3,11 +3,8 @@ package ru.practicum.shareit.item.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.Create;
 import ru.practicum.shareit.MyPageRequest;
-import ru.practicum.shareit.Update;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemInfoDto;
@@ -19,7 +16,6 @@ import java.util.List;
 @RequestMapping("/items")
 @Slf4j
 @RequiredArgsConstructor
-@Validated
 public class ItemController {
 
     private final ItemService itemService;
@@ -43,7 +39,7 @@ public class ItemController {
 
     @PostMapping
     ItemDto createItem(@RequestHeader("X-Sharer-User-Id") long userId,
-                       @Validated({Create.class}) @RequestBody ItemDto itemDto) {
+                       @RequestBody ItemDto itemDto) {
         log.info("Получен запрос к эндпоинту: POST /items, Создан объект из тела запроса:'{}'", itemDto);
         return itemService.createItem(itemDto, userId);
     }
@@ -51,7 +47,7 @@ public class ItemController {
     @PatchMapping("/{itemId}")
     ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") long userId,
                        @PathVariable long itemId,
-                       @Validated({Update.class}) @RequestBody ItemDto itemDto) {
+                       @RequestBody ItemDto itemDto) {
         return itemService.updateItem(itemId, itemDto, userId);
     }
 
@@ -67,7 +63,7 @@ public class ItemController {
     @PostMapping("/{itemId}/comment")
     CommentDto createComment(@RequestHeader("X-Sharer-User-Id") long authorId,
                              @PathVariable long itemId,
-                             @Validated({Create.class}) @RequestBody CommentDto commentDto) {
+                             @RequestBody CommentDto commentDto) {
         log.info("Получен запрос к эндпоинту: POST /items/{itemId}/comment, Создан объект из тела запроса:'{}'",
                 commentDto);
         return itemService.createComment(itemId, commentDto, authorId);

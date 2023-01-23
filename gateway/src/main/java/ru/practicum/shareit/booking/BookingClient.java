@@ -50,8 +50,11 @@ public class BookingClient extends BaseClient {
         return get("/owner?state={state}&from={from}&size={size}", ownerId, parameters);
     }
 
-    public ResponseEntity<Object> createBooking(long userId, BookItemRequestDto requestDto) {
-        return post("", userId, requestDto);
+    public ResponseEntity<Object> createBooking(long userId, BookItemRequestDto bookItemRequestDto) {
+        if (bookItemRequestDto.getStart().isAfter(bookItemRequestDto.getEnd())) {
+            throw new IllegalArgumentException("Начало бронирования должно предшестовать окончанию бронирования");
+        }
+        return post("", userId, bookItemRequestDto);
     }
 
     public ResponseEntity<Object> changeStatusOfBooking(long ownerId, long bookingId, Boolean approved) {
