@@ -17,20 +17,8 @@ public class CommentDto {
     @NotBlank(groups = {Create.class})
     private String text;
 
-//    private ItemDto item;
-
     private String authorName;
 
     private LocalDate created;
-
-//    @Getter
-//    @Setter
-//    public static class ItemDto {
-//        private Long id;
-//        private String name;
-//        private String description;
-//        private Boolean available;
-//        private Long requestId;
-//    }
 
 }
